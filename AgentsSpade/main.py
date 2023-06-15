@@ -11,11 +11,14 @@ if __name__ == "__main__":
     future_sum = sum.start()
     future_sum.result()
 
-    calculator = CalculatorAgent(jid="afonsobmelo" + SERVER, password="password")
+    calculator = CalculatorAgent(jid="afonsobmelo" + SERVER,
+                                 password="password")
     future_calculator = calculator.start()
     future_calculator.result()
 
-    client = ClientAgent(op1=1.0, op2=2.0, jid="c1" + SERVER, password="password")
+    client = ClientAgent(op1=1.0, op2=2.0,
+                         jid="c1" + SERVER,
+                         password="password")
     future_client = client.start()
     future_client.result()
 

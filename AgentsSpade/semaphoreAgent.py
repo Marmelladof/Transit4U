@@ -2,6 +2,7 @@
 import serial
 import time
 
+
 class Event:
     def __init__(self) -> None:
         print("Created")
@@ -15,6 +16,7 @@ class Event:
     def action(self):
         print("Changing Lights")
         SerialWriter("changeLights")
+
 
 class OtherEvent:
     def __init__(self) -> None:
@@ -30,18 +32,24 @@ class OtherEvent:
         print("Flickering Lights")
         SerialWriter("flickerLights")
 
+
 triggerMessages = {"changeLights": Event,
                    "flickerLights": OtherEvent}
 
+
 arduino = serial.Serial(port='COM7', baudrate=9600, timeout=.1)
+
+
 def changeLights():
     SerialWriter("changeLights")
+
 
 def SerialWriter(x):
     arduino.write(bytes(x, 'utf-8'))
     time.sleep(1)
     data = arduino.readline()
     return data.decode("utf-8")
+
 
 def SerialReader(parse):
     if parse in triggerMessages:
@@ -52,6 +60,7 @@ def SerialReader(parse):
         time.sleep(1)
         data = arduino.readline()
         print(data.decode("utf-8"))
+
 
 while True:
     data = arduino.readline()
