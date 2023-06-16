@@ -1,30 +1,32 @@
-import time
+import spade
+import os
 
-from CalculatorAgent import CalculatorAgent
-from ClientAgent import ClientAgent
-from SumAgent import SumAgent
-from config import SERVER
+from semaphoreDescription.c_Semaphore_Factory import create_b_Semaphore
+from centralAgent import centralAgent
+
+PASSWORD = os.getenv("PASSWORD")
+
+CENTRAL_AGENT_ID = "afonsobmelo"  # os.getenv("CENTRAL_AGENT_ID")
+CAMERA_AGENT_1_ID = os.getenv("CAMERA_AGENT_1_ID")
+SEMAPHORE_AGENT_1_ID = os.getenv("SEMAPHORE_AGENT_1_ID")
+INTERPRETER_AGENT_1_ID = os.getenv("INTERPRETER_AGENT_1_ID")
+
+
+# async def run_semaphore():
+
+# async def run_central():
+
 
 if __name__ == "__main__":
 
-    sum = SumAgent(jid="sumagent" + SERVER, password="password")
-    future_sum = sum.start()
-    future_sum.result()
+    central = centralAgent(jid="afonsobmelo@jabbers.one",
+                           password="1Presunto69!")
+    func = central.start()
 
-    calculator = CalculatorAgent(jid="afonsobmelo" + SERVER,
-                                 password="password")
-    future_calculator = calculator.start()
-    future_calculator.result()
+    semaphore_1 = create_b_Semaphore({"jid": SEMAPHORE_AGENT_1_ID,
+                                      "password": PASSWORD,
+                                      "Scenerio": "Road",
+                                      "Crosswalk": True})
+    func2 = semaphore_1.start()
 
-    client = ClientAgent(op1=1.0, op2=2.0,
-                         jid="c1" + SERVER,
-                         password="password")
-    future_client = client.start()
-    future_client.result()
-
-    try:
-        while sum.is_alive() or calculator.is_alive() or client.is_alive():
-            time.sleep(1)
-    except KeyboardInterrupt:
-        print("Stopping...")
-    client.stop()
+    central.RequestBehav()

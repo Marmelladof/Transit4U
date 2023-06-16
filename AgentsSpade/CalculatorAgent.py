@@ -77,11 +77,6 @@ class CalculatorAgent(Agent):
                     new_msg.body = msg_json  # Set the message content
                     await self.send(new_msg)
 
-            else:
-                self.agent.agent_say("Finishing")
-                # self.agent.agent_say("Did not received any message after 10 seconds")  # noqa: E501
-                await self.agent.stop()
-
     async def setup(self):
         self.agent_say("Agent starting . . .")
         reciveB = self.ReciveBehav()
