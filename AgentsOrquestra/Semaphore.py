@@ -19,6 +19,7 @@ CHANGE_LIGHT_FREQUENCY = 30
 class Semaphore(Agent):
 
     def __init__(self, jid: str, password: str):
+        print("Iniciating Semaphore")
         super().__init__(jid, password)
         self.next_light_change = datetime.now().timestamp() + CHANGE_LIGHT_FREQUENCY
         self.arduino = serial.Serial(port='COM7', baudrate=9600, timeout=.1)
@@ -44,42 +45,37 @@ class Semaphore(Agent):
     #         self.counter = 0
     
     class RecvBehav(CyclicBehaviour):
+        print("Semaphore RecvBehav running")
         async def run(self):
-            print("RecvBehav1.2 running")
             msg = await self.receive(timeout=10)  # wait for a message for 10 seconds
             if msg:
                 print("Message received with content: {}".format(msg.body))
-                if "changeLights" in msg.body():
+                if "changeLights" in msg.body:
                     result = self.agent.changeLights()
                     self.agent.next_light_change = datetime.now().timestamp() + CHANGE_LIGHT_FREQUENCY
                     print(result)
-            else:
-                print("Did not received any message after 10 seconds")
-                self.kill()
-    
-    class ChangeLights(CyclicBehaviour):
-        async def run(self):
-            if self.agent.next_light_change <= datetime.now().timestamp():
-                self.agent.next_light_change = datetime.now().timestamp() + CHANGE_LIGHT_FREQUENCY
-                result = self.agent.changeLights()
-                print(result)
-            else:
-                time.sleep(0.1)
 
-        async def on_end(self):
-            await self.agent.stop()
+    # class ChangeLights(CyclicBehaviour):
+    #     async def run(self):
+    #         if self.agent.next_light_change <= datetime.now().timestamp():
+    #             self.agent.next_light_change = datetime.now().timestamp() + CHANGE_LIGHT_FREQUENCY
+    #             result = self.agent.changeLights()
+    #             print(result)
+    #         else:
+    #             time.sleep(0.1)
+
+    #     async def on_end(self):
+    #         await self.agent.stop()
 
     async def setup(self):
         print(f"SEMAPHORE AGENT: {datetime.now().time()}")
         start_at = datetime.now()
         # b = self.InformBehav(period=2, start_at=start_at)
         c = self.RecvBehav()
-        d = self.ChangeLights()
-        template = Template()
-        template.set_metadata("performative", "inform")
+        # d = self.ChangeLights()
         # self.add_behaviour(b, template)
-        self.add_behaviour(c, template)
-        self.add_behaviour(d, template)
+        self.add_behaviour(c)
+        # self.add_behaviour(d, template)
 
     def health_check(self) -> bool:
         raise NotImplementedError
