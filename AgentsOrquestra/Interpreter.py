@@ -8,7 +8,6 @@ from spade.agent import Agent
 from spade.behaviour import CyclicBehaviour  # , PeriodicBehaviour, OneShotBehaviour
 from spade.message import Message
 from spade.template import Template
-from maskrcnn.maskrcnn_predict import image_detection
 
 PASSWORD = os.getenv("PASSWORD")
 CENTRAL_AGENT_ID = os.getenv("CENTRAL_AGENT_ID")
@@ -16,7 +15,17 @@ CAMERA_AGENT_1_ID = os.getenv("CAMERA_AGENT_1_ID")
 SEMAPHORE_AGENT_1_ID = os.getenv("SEMAPHORE_AGENT_1_ID")
 INTERPRETER_AGENT_1_ID = os.getenv("INTERPRETER_AGENT_1_ID")
 DEBUG = os.getenv("DEBUG", True)
+MASK_RCNN = os.getenv("MASK_RCNN", False)
 CHANGE_LIGHT_FREQUENCY = 30
+
+if MASK_RCNN:
+    from maskrcnn.maskrcnn_predict import image_detection
+
+# Delete this later
+else:
+    def image_detection(camera):
+        sheet_cheat = {'cam1_car': 45, 'cam2_car': 31, 'cam3_people': 1, 'cam4_people': 6}
+        return sheet_cheat[camera]
 
 
 class Interpreter(Agent):

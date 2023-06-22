@@ -4,4 +4,6 @@ venv
 .vscode
 CalculatorSpade/*
 */__pycache__/*
+*.pyc
+pytest_cache
 maskrcnn/*
