@@ -1,6 +1,7 @@
 import os
 import spade
 from datetime import datetime
+import threading
 
 # from spade.agent import Agent
 # from spade.behaviour import CyclicBehaviour, PeriodicBehaviour, OneShotBehaviour
@@ -10,6 +11,7 @@ from datetime import datetime
 from .Semaphore import Semaphore
 from .Central import Central
 from .Interpreter import Interpreter
+from .Arduino import Arduino
 
 PASSWORD = os.getenv("PASSWORD")
 CENTRAL_AGENT_ID = os.getenv("CENTRAL_AGENT_ID")
@@ -45,6 +47,10 @@ async def main():
     camera_jid = CAMERA_AGENT_1_ID
     central_agent = Central(jid=central_jid, password=passwd, semaphores=SEMAPHORES)
 
+    arduino_agent = Arduino()
+    mqtt_thread = threading.Thread(target=arduino_agent.start_mqtt)
+    mqtt_thread.start()
+    
     # Setup interpreter and semaphore angents
     for semaphore in SEMAPHORES.keys():
         semaphore_agent = Semaphore(jid=semaphore, password=passwd)

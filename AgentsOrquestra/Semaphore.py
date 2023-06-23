@@ -8,6 +8,8 @@ from spade.behaviour import CyclicBehaviour  # , PeriodicBehaviour, OneShotBehav
 # from spade.message import Message
 from spade.template import Template
 
+import paho.mqtt.publish as publish
+
 PASSWORD = os.getenv("PASSWORD")
 CENTRAL_AGENT_ID = os.getenv("CENTRAL_AGENT_ID")
 CAMERA_AGENT_1_ID = os.getenv("CAMERA_AGENT_1_ID")
@@ -15,6 +17,11 @@ SEMAPHORE_AGENT_1_ID = os.getenv("SEMAPHORE_AGENT_1_ID")
 INTERPRETER_AGENT_1_ID = os.getenv("INTERPRETER_AGENT_1_ID")
 CHANGE_LIGHT_FREQUENCY = 30
 
+broker = os.getenv("BROKER")
+port = 1883
+username = os.getenv("USER")
+password_broker = os.getenv("BROKERPASS")
+topic = os.getenv("TOPIC")
 
 class Semaphore(Agent):
 
@@ -51,9 +58,9 @@ class Semaphore(Agent):
             if msg:
                 print("Message received with content: {}".format(msg.body))
                 if "changeLights" in msg.body:
-                    result = self.agent.changeLights()
+                    publish.single(topic=topic, payload="Change", hostname=broker, port=1883, auth={'username':username, 'password':password_broker})
                     self.agent.next_light_change = datetime.now().timestamp() + CHANGE_LIGHT_FREQUENCY
-                    print(result)
+                    print("Changing Lights")
 
     # class ChangeLights(CyclicBehaviour):
     #     async def run(self):
