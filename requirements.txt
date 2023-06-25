@@ -35,4 +35,4 @@ timeago==1.0.16
 tzdata==2023.3
 tzlocal==5.0.1
 yarl==1.9.2
-paho
+paho-mqtt==1.6.1
